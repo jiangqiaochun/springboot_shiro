@@ -7,9 +7,7 @@
 <body>
 <form action="toLogin" data-th:object="${user}" >
 
-    用户名：<input name="name" type="text"/>
-    <p data-th:if="${#fields.hasErrors('name')}" data-th:errors="*{name}">Name Error</p>
-    <br>
+    用户名：<input name="name" type="text"/><br>
     密 码：<input name="password" type="password"/><br>
     <input type="submit" value="登录"><br>
 

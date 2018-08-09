@@ -28,23 +28,17 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken arg0) throws AuthenticationException {
         // TODO Auto-generated method stub
         System.out.println("认证");
-
         //shiro判断逻辑
         UsernamePasswordToken user = (UsernamePasswordToken) arg0;
         //System.out.println(user);
-        User realUser = new User();
-        realUser.setName(user.getUsername());
-        realUser.setPassword(String.copyValueOf(user.getPassword()));
-        User newUser = userService.findUser(realUser);
-
-
-        if(newUser == null){
-            //用户名错误
-            //shiro会抛出UnknownAccountException异常
-            return null;
+        User realUser=userService.findUserByName(user.getUsername());
+        if(realUser==null){
+            throw new UnknownAccountException();
+        }else if(!(user.getPassword()).equals(realUser.getPassword()) ){
+            throw new IncorrectCredentialsException();
+        }else{
+            return new SimpleAuthenticationInfo(realUser,realUser.getPassword(),"");
         }
-
-        return new SimpleAuthenticationInfo(newUser,newUser.getPassword(),"");
     }
 
 }

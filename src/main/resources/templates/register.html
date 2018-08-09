@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:data-th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+    <p>请输入要添加的用户信息</p>
+    <form action="add" data-th:object="${user}">
+        <p>用户名：</p><br>
+        <input type="text" name="name"><br>
+        <p>密码：</p><br>
+        <input type="password" name="password"><br>
+        <p>权限：</p><br>
+        <input type="text" name="authority" placeholder="example user:all"><br>
+        <input type="submit" value="添加">
+    </form>
+
+</body>
+</html>

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @ApiIgnore
 @Controller
@@ -50,6 +53,14 @@ public class UserController {
     public String permission(){
         return "permission";
     }
+    @RequestMapping(value="/register",method = RequestMethod.GET)
+    public String register(){
+        return "register";
+    }
+    @RequestMapping(value="/reg_success",method = RequestMethod.GET)
+    public String reg_success(){
+        return "reg_success";
+    }
     /*@RequestMapping(value="/toLogin",method = RequestMethod.GET)
     public String toLogin(@Valid User user, Model model){
         Subject subject=SecurityUtils.getSubject();
@@ -70,11 +81,31 @@ public class UserController {
         Subject subject=SecurityUtils.getSubject();
         UsernamePasswordToken userToken=new UsernamePasswordToken(user.getName(),user.getPassword());
         if(bindingResult.hasErrors()){
+            List<ObjectError> errorList = bindingResult.getAllErrors();
+            for(ObjectError error : errorList){
+                System.out.println(error.getDefaultMessage());
+            }
             return "login";
         }
         subject.login(userToken);
         return "redirect:all";
 
+    }
+    @RequestMapping(value="/add",method = RequestMethod.GET)
+    public String add(@Valid User user,BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            List<ObjectError> errorList = bindingResult.getAllErrors();
+            for(ObjectError error : errorList){
+                System.out.println(error.getDefaultMessage());
+            }
+            return "register";
+        }
+        Integer row = userService.add(user);
+        if (row > 0) {
+            return "redirect:reg_success";
+        }else{
+            return "register";
+        }
     }
 
 }

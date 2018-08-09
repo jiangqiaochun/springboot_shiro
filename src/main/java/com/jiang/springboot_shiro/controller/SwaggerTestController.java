@@ -5,9 +5,17 @@ import com.jiang.springboot_shiro.result.Result;
 import com.jiang.springboot_shiro.result.ResultGenerator;
 import com.jiang.springboot_shiro.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -62,6 +70,29 @@ public class SwaggerTestController {
         }else{
             return ResultGenerator.genFailResult("更新失败");
         }
+
+    }
+    @ApiOperation(value = "登录接口", notes = "使用用户名和密码登录")
+    @RequestMapping(value="/user/{name}",method = RequestMethod.POST)
+    public Result toLogin( @RequestBody User user, BindingResult bindingResult){
+        Subject subject=SecurityUtils.getSubject();
+        UsernamePasswordToken userToken=new UsernamePasswordToken(user.getName(),user.getPassword());
+        if(bindingResult.hasErrors()){
+            List<ObjectError> errorList = bindingResult.getAllErrors();
+            String errorMsg="";
+            for(ObjectError error : errorList){
+                errorMsg +=error;
+            }
+            return ResultGenerator.genFailResult(errorMsg);
+        }
+        try{
+            subject.login(userToken);
+        }catch (UnknownAccountException e){
+            return ResultGenerator.genFailResult("账号不存在");
+        }catch (IncorrectCredentialsException e){
+            return ResultGenerator.genFailResult("密码错误");
+        }
+        return ResultGenerator.genSuccessResult();
 
     }
 

@@ -14,7 +14,8 @@ public class User  implements Serializable{
     @Size(min=2, max=30)
     @ApiModelProperty(value="用户名",name="name",example="用户名")
     private String name;
-    @JsonIgnore
+    @NotNull(message = "密码不为空")
+    @Size(min=4, max=12)
     @ApiModelProperty(value="密码",name="password",example="密码")
     private String password;
     @ApiModelProperty(value="权限",name="authority",example="权限")
