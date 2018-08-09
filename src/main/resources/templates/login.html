@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:data-th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<body>
+<form action="toLogin" data-th:object="${user}" >
+
+    用户名：<input name="name" type="text"/>
+    <p data-th:if="${#fields.hasErrors('name')}" data-th:errors="*{name}">Name Error</p>
+    <br>
+    密 码：<input name="password" type="password"/><br>
+    <input type="submit" value="登录"><br>
+
+
+</form>
+</body>
+</html>
